@@ -34,4 +34,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Command to run your function when the container starts
-CMD ["functions-framework", "--target=pubsub_handler"]
+# This is your NEW command
+CMD ["functions-framework", "--target=pubsub_handler", "--signature-type=cloudevent"]
