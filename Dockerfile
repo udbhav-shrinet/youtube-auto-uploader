@@ -35,4 +35,5 @@ COPY . .
 
 # Command to run your function when the container starts
 # This is your NEW command
-CMD ["functions-framework", "--target=pubsub_handler", "--signature-type=cloudevent"]
+# This is your NEW command
+CMD exec functions-framework --source=main.py --target=pubsub_handler --signature-type=cloudevent
