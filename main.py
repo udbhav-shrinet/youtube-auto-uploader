@@ -96,6 +96,7 @@ def pubsub_handler(cloud_event):
         filename = f"/tmp/{uuid4().hex}.mp4"
         
         ydl_opts = {
+            'verbose': True,  # <-- ADD THIS LINE
             "outtmpl": filename,
             "format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
             "merge_output_format": "mp4"
