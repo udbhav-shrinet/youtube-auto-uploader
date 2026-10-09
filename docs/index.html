@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Automation & Publishing Console</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0c10;
+            --bg-card: #12161f;
+            --accent-red: #ef4444;
+            --accent-purple: #c084fc;
+            --accent-blue: #38bdf8;
+            --accent-emerald: #34d399;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #1e293b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-primary); color: var(--text-primary); min-height: 100vh; display: flex; flex-direction: column; }
+        header { padding: 1.25rem 2rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: rgba(18, 22, 31, 0.8); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; }
+        .brand { display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem; font-weight: 800; }
+        .badge { font-family: 'JetBrains Mono', monospace; background: rgba(239, 68, 68, 0.15); color: var(--accent-red); font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 9999px; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--accent-red); }
+        .container { max-width: 1280px; margin: 0 auto; padding: 2rem; width: 100%; flex: 1; }
+        .hero { text-align: center; margin-bottom: 2.5rem; }
+        .hero h1 { font-size: 2.25rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 0.75rem; background: linear-gradient(135deg, #ffffff 0%, var(--accent-red) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { color: var(--text-secondary); font-size: 1.05rem; max-width: 650px; margin: 0 auto; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+        .stat-box { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; border-left: 4px solid var(--accent-red); }
+        .stat-label { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.25rem; }
+        .stat-val { font-size: 1.4rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem; }
+        .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; display: flex; justify-content: space-between; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.3rem; text-transform: uppercase; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; background: #0f131a; border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.9rem; font-family: inherit; }
+        .btn { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 700; cursor: pointer; width: 100%; }
+        .queue-item { background: #0f131a; border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; }
+        .tag-pill { background: rgba(56, 189, 248, 0.15); color: var(--accent-blue); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; }
+        footer { border-top: 1px solid var(--border-color); padding: 1.5rem 2rem; text-align: center; color: var(--text-secondary); font-size: 0.85rem; }
+        @media (max-width: 900px) { .grid-2, .stats-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="brand">
+            <span>🚀 AutoUploader Studio</span>
+            <span class="badge">Daemon Service</span>
+        </div>
+        <div class="nav-links">
+            <a href="https://github.com/udbhav-shrinet/youtube-auto-uploader" target="_blank">View on GitHub →</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Automated Video Publishing & Schedule Console</h1>
+            <p>Stage video payloads, optimize metadata tags, schedule cron publishing windows, and track chunked upload progress.</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-label">Published Assets</div>
+                <div class="stat-val" id="cnt-published">42 Videos</div>
+            </div>
+            <div class="stat-box" style="border-left-color: #38bdf8;">
+                <div class="stat-label">Upload Throughput</div>
+                <div class="stat-val">100% Success</div>
+            </div>
+            <div class="stat-box" style="border-left-color: #34d399;">
+                <div class="stat-label">Scheduled in Queue</div>
+                <div class="stat-val" id="cnt-queue">3 Jobs</div>
+            </div>
+            <div class="stat-box" style="border-left-color: #c084fc;">
+                <div class="stat-label">API Quota Usage</div>
+                <div class="stat-val">1,600 / 10k</div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-title">
+                    <span>Stage Video Publication</span>
+                    <span class="badge">Payload Builder</span>
+                </div>
+                <div class="form-group">
+                    <label>Video File Path</label>
+                    <input type="text" id="v-path" value="/media/storage/render_20261009_final.mp4">
+                </div>
+                <div class="form-group">
+                    <label>Video Title</label>
+                    <input type="text" id="v-title" value="Distributed Architecture Patterns for High-Throughput Systems">
+                </div>
+                <div class="form-group">
+                    <label>Tags (Comma Separated)</label>
+                    <input type="text" id="v-tags" value="Architecture, Cloud, DevOps, DistributedSystems">
+                </div>
+                <div class="form-group">
+                    <label>Privacy & Schedule</label>
+                    <select id="v-privacy">
+                        <option value="public">Public (Immediate)</option>
+                        <option value="scheduled">Scheduled (Next Cron Window)</option>
+                        <option value="unlisted">Unlisted Review</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="enqueueVideo()">Queue Video Job</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <span>Active Publishing Pipeline Queue</span>
+                    <span class="badge">Job Scheduler</span>
+                </div>
+                <div id="queue-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Deployed via GitHub Pages • YouTube Data API Automated Ingestion Pipeline • Maintained by Udbhav Shrinet
+    </footer>
+
+    <script>
+        const queue = [
+            { title: "Distributed Database Indexing Deep Dive", status: "Staged (Cron 18:00 UTC)", privacy: "Public", time: "in 2 hours" },
+            { title: "Building Autonomous Systems with Python", status: "Uploading (82%)", privacy: "Public", time: "Now" },
+            { title: "Kafka Event Streams & Telemetry Pipeline", status: "Scheduled", privacy: "Unlisted", time: "Tomorrow" }
+        ];
+
+        function renderQueue() {
+            const container = document.getElementById('queue-container');
+            container.innerHTML = '';
+            queue.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'queue-item';
+                div.innerHTML = `
+                    <div>
+                        <div style="font-weight:700; color:#f1f5f9; font-size:0.9rem;">${item.title}</div>
+                        <div style="font-size:0.75rem; color:#94a3b8; margin-top:0.2rem;">${item.status} • <span class="tag-pill">${item.privacy}</span></div>
+                    </div>
+                    <div style="font-size:0.75rem; color:#c084fc; font-family:'JetBrains Mono'">${item.time}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function enqueueVideo() {
+            const title = document.getElementById('v-title').value;
+            const privacy = document.getElementById('v-privacy').value;
+            queue.unshift({ title, status: "Staged (Ready)", privacy: privacy.toUpperCase(), time: "Pending" });
+            renderQueue();
+            document.getElementById('cnt-queue').innerText = queue.length + ' Jobs';
+        }
+
+        window.onload = renderQueue;
+    </script>
+</body>
+</html>
