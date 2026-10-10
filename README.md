@@ -1,69 +1,17 @@
-# YouTube Automated Video Ingestion & Publishing Pipeline
+# youtube-auto-uploader
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
-[![Interactive Demo](https://img.shields.io/badge/demo-GitHub%20Pages-red.svg)](https://udbhav-shrinet.github.io/youtube-auto-uploader/)
-[![Python Version](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11-blue.svg)]()
-[![Docker](https://img.shields.io/badge/docker-ready-blue.svg)]()
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+A Python script to upload standard videos to YouTube with customizable metadata and privacy settings via the YouTube Data API v3.
 
-> Containerized automated production daemon and publishing pipeline for scheduled video ingestion, chunked resumable uploading, and metadata management via YouTube Data API v3.
+## How it works
 
----
+1. Authenticates using local OAuth (`client_secrets.json` / `token.json`).
+2. Takes a video file, title, description, tags, category, and privacy level (`public`, `private`, `unlisted`).
+3. Uploads the file via YouTube Data API v3 using 5MB resumable chunks.
+4. Outputs the final video link (`https://youtu.be/<id>`).
 
-## 🚀 Live Interactive Showcase
+## Usage
 
-Simulate the video publishing queue and schedule console:  
-👉 **[Launch AutoUploader Studio](https://udbhav-shrinet.github.io/youtube-auto-uploader/)**
-
----
-
-## ✨ Key Capabilities
-
-- **Resumable Chunked Uploads**: 5MB buffer streaming for fault-tolerant video uploads over unstable network connections.
-- **Automated OAuth2 Flow**: Persistent token storage with automated background token refresh.
-- **Cron Scheduling Engine**: Automated background worker that monitors watch directories and publishes on scheduled intervals.
-- **Dockerized Runtime**: Containerized environment for microservice deployments and headless cloud servers.
-
----
-
-## 🛠️ System Architecture
-
-```text
-┌─────────────────────────┐       ┌────────────────────────┐       ┌──────────────────────┐
-│  Rendered Media Files   │ ───>  │  Scheduled Cron Engine │ ───>  │ Chunked Resumable    │
-│  (.mp4, .mov, metadata) │       │  Queue & Payload Mgr   │       │  YouTube API Client  │
-└─────────────────────────┘       └────────────────────────┘       └──────────┬───────────┘
-                                                                              │
-                                                   ┌──────────────────────────┴──────────────────────────┐
-                                                   ▼                                                     ▼
-                                       ┌─────────────────────────┐                           ┌───────────────────────┐
-                                       │   Live YouTube Video    │                           │  GitHub Pages Studio  │
-                                       │   Public / Scheduled    │                           │  Publishing Dashboard │
-                                       └─────────────────────────┘                           └───────────────────────┘
+```bash
+pip install -r requirements.txt
+python main.py --file "video.mp4" --title "My Video" --privacy "public"
 ```
-
----
-
-## 📦 Installation & Setup
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/udbhav-shrinet/youtube-auto-uploader.git
-   cd youtube-auto-uploader
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Execute Video Upload**:
-   ```bash
-   python main.py --file "video.mp4" --title "System Architecture Overview" --privacy "public"
-   ```
-
----
-
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
